@@ -1,0 +1,182 @@
+<div class="page">
+    <div fxLayout="row" class="container">
+        <div fxLayout="column" class="left-side">
+            <div fxLayout="row" fxLayoutAlign="space-between center" style="margin-top: 1rem;">
+                <div fxLayout="row" fxLayoutAlign="start center">
+                    <label class="open_txt">Open</label>
+                    <div class="open_count">
+                        <label>{{ProjectList.length}}</label>
+                    </div>
+                    <!-- <mat-select placeholder="All" class="select-btn" style="width: 30%;">
+                        <mat-option style="color: #1e3e67;font-size:12px;font-family: Poppins;">Open</mat-option>
+                        <mat-option style="color: #1e3e67;font-size:12px;font-family: Poppins;">Completed</mat-option>
+                    </mat-select> -->
+                </div>
+                <div class="new_btn" matRipple (click)="NewClicked()">
+                    <span>New</span>
+                    <img src="/assets/images/Union 1.svg" style="width: 10px;">
+                </div>
+            </div>
+            <div fxLayout="row" style="margin-top: 1rem;align-items: center;cursor: pointer;">
+                <div class="search_input">
+                    <input class="search_input1" placeholder="Search to - do">
+                </div>
+                <!-- <span style="margin-left: 1rem;">Search to - do</span>
+                </div> -->
+                <div class="search_img">
+                    <img src="/assets/images/XMLID_223_.svg" style="width: 14px;">
+                </div>
+            </div>
+            <span class="divider"></span>
+            <div class="list_wrapper">
+                <mat-selection-list [multiple]="false" [disableRipple]="true" class="matlist">
+                    <mat-list-option class="cards" *ngFor="let item of ProjectList;index as i" [selected]="selectedProject.ProjectName==item.ProjectName" (click)="SelectProject(item)">
+                        <div class="item_wrapper" fxLayout="column" fxLayoutAlign="space-evenly start"
+                            style="height: 5rem;">
+                            <div fxLayout="row" fxLayoutAlign="space-between center" style="width: 100%;">
+                                <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                    <img src="/assets/images/Layer_x0020_1.png" class="list_icons">
+                                    <label class="list_headings">{{item.ProjectName}}</label>
+                                </div>
+                                <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                    <img src="/assets/images/date.png" class="list_icons">
+                                    <label class="list_headings">{{item.Date | date :'dd/MM/yyyy'}}</label>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="8px" fxLayoutAlign="start center">
+                                <img src="/assets/images/Icons.png" class="list_icons">
+                                <label class="list_headings">{{item.ProjectManager}}</label>
+                            </div>
+                        </div>
+                    </mat-list-option>
+                </mat-selection-list>
+                <!-- <div *ngIf="ProjectList.length==0" fxFlex=100 fxLayout="row" fxLayoutAlign="center">
+                    <label class="rs-headings1">No projects found</label>
+                </div> -->
+            </div>
+        </div>
+        <div fxLayout="column" class="right-side">
+            <div class="form-container">
+                <div style="padding: 2rem;padding-left: 3rem;padding-bottom: 1rem;">
+                    <span class="rs-headings" style="cursor: pointer;" (click)="isEdit=isNewProject?false:true;ProjectFormGroup.enable();">{{isNewProject?'Create Project':'Edit Project'}}</span>
+                </div>
+                <form  [formGroup]="ProjectFormGroup" autocomplete="off">
+                    <div class="form-wrapper" fxLayout="column" fxLayoutAlign="start start">
+                        <div class="input-wrapper" fxLayout="row" fxLayoutAlign="space-between center">
+                            <label class="rs-headings1">Project</label>
+                            <!-- <input autocomplete="off" class="input1"> -->
+                            <mat-form-field fxFlex=65 class="form-field">
+                                <input matInput type="text" fxFlex formControlName="ProjectName">
+                                <mat-error *ngIf="ProjectFormGroup.get('ProjectName').touched && ProjectFormGroup.get('ProjectName').hasError('required')">
+                                    Project is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="space-between center" class="input-wrapper">
+                            <label class="rs-headings1">Project Manager</label>
+                            <mat-form-field fxFlex=65 class="form-field">
+                                <input matInput type="text" fxFlex formControlName="ProjectManager">
+                                <mat-error *ngIf="ProjectFormGroup.get('ProjectManager').touched && ProjectFormGroup.get('ProjectManager').hasError('required')">
+                                    Project manager is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="space-between center" class="input-wrapper">
+                            <label class="rs-headings1">Project Date</label>
+                            <mat-form-field fxFlex=65 class="form-field">
+                                <input matInput [matDatepicker]="picker" fxFlex formControlName="ProjectDate">
+                                <mat-datepicker-toggle matPrefix [for]="picker">
+                                    <img src="assets/images/iconfinder_Calendar_728916.svg" matDatePickerToggleIcon>
+                                </mat-datepicker-toggle>
+                                <mat-datepicker #picker></mat-datepicker>
+                                <mat-error *ngIf="ProjectFormGroup.get('ProjectDate').touched && ProjectFormGroup.get('ProjectDate').hasError('required')">
+                                    Project date is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="space-between center" class="input-wrapper">
+                            <label class="rs-headings1">Data</label>
+                            <mat-form-field fxFlex=65 class="form-field">
+                                <input matInput type="text" fxFlex formControlName="Data">
+                                <mat-error *ngIf="ProjectFormGroup.get('Data').touched && ProjectFormGroup.get('Data').hasError('required')">
+                                    Data is required</mat-error>
+                            </mat-form-field>
+                        </div>
+                        <div fxLayout="row" fxLayoutAlign="space-between center" class="input-wrapper">
+                            <label class="rs-headings1">Document</label>
+                            <input hidden type="file" #fileInput id="file" (change)="handleFileInput($event)"
+                                accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" formControlName="Document"/>
+                            <div class="custom-file-input" fxLayout="row" fxLayoutAlign="end center">
+                                <div fxFlex=100 fxLayout="row" fxLayoutAlign="center center">
+                                    <label *ngIf="file==undefined" class="rs-headings2">Drag and Place </label>
+                                    <label class="rs-headings3">{{file?.name}}</label>
+                                </div>
+                                <button type="button" class="foo_button1" style="margin-right: 4px;"
+                                    (click)="fileInput.click()">Upload</button>
+                            </div>
+                        </div>
+                        <!-- <mat-error *ngIf="ProjectFormGroup.get('Document').touched && ProjectFormGroup.get('Document').hasError('required')">
+                            Document is required</mat-error> -->
+                    </div>
+                </form>
+                <div fxLayout="row" fxLayoutAlign="center center" style="width: 100%;padding: 1.5rem 0;">
+                    <button class="foo_button3" mat-button (click)="SaveClicked()" *ngIf="isEdit">Save</button>
+                    <button class="foo_button3" mat-button (click)="ReleaseClicked()" *ngIf="!isEdit">Release</button>
+                </div>
+            </div>
+
+            <!-- <div class="actions" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="2rem">
+                <button class="foo_button1" mat-button>Run AI</button>
+                <button class="foo_button2" mat-button>Assign</button>
+            </div> -->
+            <div style="height: 12rem;width: 97%;">
+                <div class="timeline-container" fxLayout="row" fxLayoutAlign="start center" fxFlex>
+                    <div class="timeline-wrapper" fxLayout="column" (click)="timeline_toggle()">
+                        <div class="tlb1" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0.5rem">
+                            <div class="tl-img-wrapper">
+                                <img src="/assets/images/iconfinder_ic_timeline_48px_3669196.svg" style="width: 24px;">
+                            </div>
+                            <span class="rs-headings">Timeline</span>
+                        </div>
+                        <div class="tlb2" fxLayout="row" fxLayoutAlign="end center">
+                            <img [@rotate]="tl_state ? 'open' : 'closed'" src="/assets/images/Union 5.svg"
+                                style="width: 16px;">
+                        </div>
+                    </div>
+                    <div [@openClose]="tl_state ? 'open' : 'closed'" class="tl-expanded" fxFlex=100 flexLayout="row"
+                        fxLayoutAlign="space-evenly center">
+                        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0.2rem">
+                            <img src="/assets/images/Group 7644.svg" style="width: 5rem;">
+                            <label class="rs-headings">Total Projects</label>
+                            <label class="tl-ex-smtxt">043</label>
+                        </div>
+                        <div class="v-devider"></div>
+                        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="0.2rem">
+                            <img src="/assets/images/Group 7634.svg" style="width: 5rem;">
+                            <label class="rs-headings">Created on </label>
+                            <label class="tl-ex-smtxt">23/01/2021</label>
+                        </div>
+                        <div class="v-devider"></div>
+                        <div fxLayout="column" fxLayoutAlign="center end" fxLayoutGap="0.5rem">
+                            <div fxLayout="row" fxLayoutGap="0.5rem">
+                                <label class="rs-headings">AI Executed Success</label>
+                                <div class="tl-ex-box">
+                                    <label class="tl-ex-box-txt">23</label>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="0.5rem">
+                                <label class="rs-headings">No. of Assign</label>
+                                <div class="tl-ex-box">
+                                    <label class="tl-ex-box-txt">10</label>
+                                </div>
+                            </div>
+                            <div fxLayout="row" fxLayoutGap="0.5rem">
+                                <label class="rs-headings">Completed Process</label>
+                                <div class="tl-ex-box">
+                                    <label class="tl-ex-box-txt">10</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
